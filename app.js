@@ -69,7 +69,52 @@ app.route("/articles/:articleTitle")
             res.send("No matched articles found");
         }
     });
+})
+
+//Update was deprecated so I use updateOne, which is simpler.
+//
+.put(function (req, res){
+    Article.replaceOne(
+        {title: req.params.articleTitle}, 
+        {title: req.params.articleTitle, content: req.body.content},
+        function(err){
+            if(!err){
+                res.send("Article has been updated succesfully")
+            } else {
+                res.send("Failed to update the article");
+            }
+        })
+})
+
+//Kind of the same as update since the other one was deprecated.
+.patch(function (req, res){
+    Article.updateOne(
+        {title: req.params.articleTitle},
+        {$set: req.body},
+        function(err){
+            if(!err){
+                res.send("Succesfully patched the article")
+            } else {
+                res.render("Failed to update")
+            }
+        }
+    )
+})
+
+.delete(function (req, res){
+    Article.deleteOne(
+        {title: req.params.articleTitle},
+        function(err){
+            if(!err){
+                res.send("Item deleted succesfully");
+            } else {
+                res.send("Failed to delete");
+            }
+        }
+    )
 });
+
+
 
 
 let port = process.env.PORT;
@@ -78,5 +123,5 @@ if (port == null || port == "") {
 }
 
 app.listen(port, function() {
-  console.log("Server hast started succesfully");
+  console.log("Server has started succesfully");
 });
